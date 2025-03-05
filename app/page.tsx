@@ -351,10 +351,7 @@ export default function Home() {
               <span className="text-sm text-zinc-400">Wallows, COIN, girl in red y más</span>
             </a>
             <a href="#" className="bg-white/5 p-3 rounded-md flex flex-col gap-2 hover:bg-white/10">
-              <Image src="https://images.unsplash.com/photo-1671726203449-ad3279d25921?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" className="w-full" width={120} height={120} alt="Portada del álbum" />
-              <strong className="font-semibold text-white">Mix Diario 2</strong>
-              <span className="text-sm text-zinc-400">Imagine Dragons, AJR, OneRepublic</span>
-            </a>
+            
             <a href="#" className="bg-white/5 p-3 rounded-md flex flex-col gap-2 hover:bg-white/10">
               <Image src="https://images.unsplash.com/photo-1671726203454-488ab18f7eda?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" className="w-full" width={120} height={120} alt="Portada del álbum" />
               <strong className="font-semibold text-white">Mix Diario 3</strong>
