@@ -161,6 +161,34 @@ const playlists = {
   ]
 };
 
+// Definir mixes de tecno para la sección "Hecho para ti"
+const technoMixes = [
+  {
+    id: "mix-1",
+    title: "Mix Techno Underground",
+    artists: "Ben Klock, Marcel Dettmann, Jeff Mills",
+    coverUrl: "https://images.pexels.com/photos/1540406/pexels-photo-1540406.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  },
+  {
+    id: "mix-2",
+    title: "Mix Minimal Techno",
+    artists: "Richie Hawtin, Dubfire, Paco Osuna",
+    coverUrl: "https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  },
+  {
+    id: "mix-3",
+    title: "Mix Tech House",
+    artists: "Fisher, Solardo, Hot Since 82",
+    coverUrl: "https://images.pexels.com/photos/1694900/pexels-photo-1694900.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  },
+  {
+    id: "mix-4",
+    title: "Mix Techno Rave",
+    artists: "Amelie Lens, Charlotte de Witte, FJAAK",
+    coverUrl: "https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  }
+];
+
 export default function Home() {
   const { currentSong, isPlaying, progress, duration, playSong, setVolume, seekTo } = useAudioPlayer();
   const [activePlaylist, setActivePlaylist] = useState<string | null>(null);
@@ -342,21 +370,22 @@ export default function Home() {
             ))}
           </div>
 
-          <h2 className="font-semibold text-xl lg:text-2xl mt-8 text-white">Hecho para ti</h2>
+          <h2 className="font-semibold text-xl lg:text-2xl mt-8 text-white">Mixes de Techno</h2>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
-            <a href="#" className="bg-white/5 p-3 rounded-md flex flex-col gap-2 hover:bg-white/10">
-              <Image src="https://images.unsplash.com/photo-1671726203638-83742a2721a1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" className="w-full" width={120} height={120} alt="Portada del álbum" />
-              <strong className="font-semibold text-white">Mix Diario 1</strong>
-              <span className="text-sm text-zinc-400">Wallows, COIN, girl in red y más</span>
-            </a>
-            <a href="#" className="bg-white/5 p-3 rounded-md flex flex-col gap-2 hover:bg-white/10">
-            
-            <a href="#" className="bg-white/5 p-3 rounded-md flex flex-col gap-2 hover:bg-white/10">
-              <Image src="https://images.unsplash.com/photo-1671726203454-488ab18f7eda?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" className="w-full" width={120} height={120} alt="Portada del álbum" />
-              <strong className="font-semibold text-white">Mix Diario 3</strong>
-              <span className="text-sm text-zinc-400">Coldplay, The Lumineers, Vance Joy</span>
-            </a>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+            {technoMixes.map((mix) => (
+              <a key={mix.id} href="#" className="bg-white/5 p-3 rounded-md flex flex-col gap-2 hover:bg-white/10">
+                <Image 
+                  src={mix.coverUrl} 
+                  className="w-full aspect-square object-cover rounded-md" 
+                  width={200} 
+                  height={200} 
+                  alt={`${mix.title} cover`} 
+                />
+                <strong className="font-semibold text-white">{mix.title}</strong>
+                <span className="text-sm text-zinc-400">{mix.artists}</span>
+              </a>
+            ))}
           </div>
         </main>
       </div>
