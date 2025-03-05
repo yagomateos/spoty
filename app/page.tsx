@@ -51,7 +51,7 @@ const playlists = {
       audioUrl: "https://dl.dropboxusercontent.com/s/aag5tjzn9n1xhzv/bensound-dance.mp3"
     },
   ],
-  "tecno": [
+  "techno": [
     {
       id: "tec-1",
       title: "Techno Pulse",
@@ -123,7 +123,7 @@ const playlists = {
       audioUrl: "https://dl.dropboxusercontent.com/s/aag5tjzn9n1xhzv/bensound-dance.mp3"
     },
   ],
-  "tecnoRave": [
+  "technoRave": [
     {
       id: "tr-1",
       title: "Rave Night",
@@ -161,7 +161,7 @@ const playlists = {
   ]
 };
 
-// Definir mixes de tecno para la sección "Hecho para ti"
+// Definir mixes de techno para la sección "Hecho para ti"
 const technoMixes = [
   {
     id: "mix-1",
@@ -248,13 +248,13 @@ export default function Home() {
               </a>
               <a 
                 href="#" 
-                className={`text-sm ${activePlaylist === 'tecno' ? 'text-zinc-100' : 'text-zinc-400'} hover:text-zinc-100`}
+                className={`text-sm ${activePlaylist === 'techno' ? 'text-zinc-100' : 'text-zinc-400'} hover:text-zinc-100`}
                 onClick={(e) => {
                   e.preventDefault();
-                  handlePlaylistClick('tecno');
+                  handlePlaylistClick('techno');
                 }}
               >
-                Tecno
+                techno
               </a>
               <a 
                 href="#" 
@@ -288,13 +288,13 @@ export default function Home() {
               </a>
               <a 
                 href="#" 
-                className={`text-sm ${activePlaylist === 'tecnoRave' ? 'text-zinc-100' : 'text-zinc-400'} hover:text-zinc-100`}
+                className={`text-sm ${activePlaylist === 'technoRave' ? 'text-zinc-100' : 'text-zinc-400'} hover:text-zinc-100`}
                 onClick={(e) => {
                   e.preventDefault();
-                  handlePlaylistClick('tecnoRave');
+                  handlePlaylistClick('technoRave');
                 }}
               >
-                Tecno Rave
+                Techno Rave
               </a>
               <a 
                 href="#" 
@@ -304,7 +304,7 @@ export default function Home() {
                   handlePlaylistClick('techoHouse');
                 }}
               >
-                Techo House
+                Techno House
               </a>
             </nav>
           </nav>
@@ -342,13 +342,13 @@ export default function Home() {
           <h1 className="font-semibold text-2xl lg:text-3xl mt-8 text-white">
             {activePlaylist === 'industrial' ? 'Industrial' : 
              activePlaylist === 'electronica' ? 'Electronica' : 
-             activePlaylist === 'tecno' ? 'Tecno' : 
+             activePlaylist === 'techno' ? 'techno' : 
              activePlaylist === 'house' ? 'House' : 
              activePlaylist === 'minimal' ? 'Minimal' : 
              activePlaylist === 'remixes' ? 'Remixes' : 
-             activePlaylist === 'tecnoRave' ? 'Tecno Rave' : 
+             activePlaylist === 'technoRave' ? 'techno Rave' : 
              activePlaylist === 'techoHouse' ? 'Techo House' : 
-             'Buenas tardes'}
+             'Spoti Techno'}
           </h1>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
