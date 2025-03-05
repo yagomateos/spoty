@@ -1,153 +1,145 @@
-"use client";
+"use client"
 
-import { useState, useRef } from "react";
-import { Play, Pause } from "lucide-react";
-import { playlists } from "@/lib/songs";
+import type React from "react"
+
+import { useState } from "react"
+import { Play, Pause } from "lucide-react"
+import { playlists, songs } from "@/lib/songs"
+import { useAudioPlayer } from "@/hooks/useAudioPlayer"
 
 export default function HomePage() {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { playSong, isPlaying, currentSong, setCurrentPlaylist } = useAudioPlayer()
+  const [featuredPlaylists] = useState([
+    {
+      id: "top50",
+      title: "Top 50 Global",
+      coverUrl:
+        "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    },
+    {
+      id: "dance",
+      title: "Dance Mix",
+      coverUrl: "https://images.pexels.com/photos/1540406/pexels-photo-1540406.jpeg",
+    },
+    {
+      id: "chill",
+      title: "Chill Vibes",
+      coverUrl: "https://i.scdn.co/image/ab67706f00000002c414e7daf34690c9f983f76e",
+    },
+  ])
 
-  const togglePlay = () => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio(playlists.top50Global.songs[0].audioUrl);
-      audioRef.current.onended = () => setIsPlaying(false);
-    }
+  const technoMixes = [
+    {
+      id: "underground",
+      title: "Mix Techno Underground",
+      artists: "Ben Klock, Marcel Dettmann, Jeff Mills",
+      coverUrl:
+        "https://images.pexels.com/photos/1694900/pexels-photo-1694900.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    },
+    {
+      id: "minimal",
+      title: "Mix Minimal Techno",
+      artists: "Richie Hawtin, Dubfire, Paco Osuna",
+      coverUrl:
+        "https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    },
+    {
+      id: "house",
+      title: "Mix Tech House",
+      artists: "Fisher, Solardo, Hot Since 82",
+      coverUrl:
+        "https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    },
+    {
+      id: "rave",
+      title: "Mix Techno Rave",
+      artists: "Amelie Lens, Charlotte de Witte, FJAAK",
+      coverUrl:
+        "https://images.pexels.com/photos/1540406/pexels-photo-1540406.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    },
+  ]
 
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
+  const handlePlayPlaylist = (playlistId: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+
+    if (playlists[playlistId] && playlists[playlistId].songs.length > 0) {
+      setCurrentPlaylist(playlists[playlistId].songs)
+      playSong(playlists[playlistId].songs[0])
     }
-    
-    setIsPlaying(!isPlaying);
-  };
+  }
+
+  const handlePlayMix = (index: number, e: React.MouseEvent) => {
+    e.stopPropagation()
+    const songIndex = index % songs.length
+    setCurrentPlaylist(songs)
+    playSong(songs[songIndex])
+  }
+
+  const isPlayingFromPlaylist = (playlistId: string) => {
+    if (!currentSong || !isPlaying) return false
+    return playlists[playlistId]?.songs.some((song) => song.id === currentSong.id)
+  }
 
   return (
     <div className="flex-1 overflow-auto bg-black p-6">
       <h1 className="text-3xl font-bold mb-6">Spoty Tech</h1>
 
-      {/* Featured Playlists - Horizontal Cards */}
-      <div className="flex gap-6 mb-10">
-        <div className="flex items-center gap-4 bg-[#181818] hover:bg-[#252525] transition-colors rounded overflow-hidden cursor-pointer p-4 flex-1 relative group">
-          <div className="w-16 h-16 relative flex-shrink-0">
-            <img 
-              src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" 
-              alt="Top 50 Global" 
-              className="object-cover w-full h-full"
-            />
-          </div>
-          <div>
-            <h3 className="font-bold">Top 50 Global</h3>
-          </div>
-          
-          {/* Botón de reproducción */}
-          <button 
-            onClick={(e) => {
-              e.stopPropagation();
-              togglePlay();
-            }}
-            className="absolute right-4 w-10 h-10 flex items-center justify-center rounded-full bg-[#1DB954] text-black hover:scale-105 transition"
+      {/* Featured Playlists */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        {featuredPlaylists.map((playlist) => (
+          <div
+            key={playlist.id}
+            className="bg-[#181818] hover:bg-[#282828] transition-colors rounded-md overflow-hidden cursor-pointer group relative flex items-center gap-4 p-4"
           >
-            {isPlaying ? 
-              <Pause size={20} /> : 
-              <Play size={20} fill="black" className="ml-1" />
-            }
-          </button>
-        </div>
-        
-        <div className="flex items-center gap-4 bg-[#181818] hover:bg-[#252525] transition-colors rounded overflow-hidden cursor-pointer p-4 flex-1">
-          <div className="w-16 h-16 relative flex-shrink-0">
-            <img 
-              src="https://images.pexels.com/photos/1540406/pexels-photo-1540406.jpeg" 
-              alt="Dance Mix" 
-              className="object-cover w-full h-full"
-            />
+            <div className="w-12 h-12 flex-shrink-0">
+              <img
+                src={playlist.coverUrl || "/placeholder.svg"}
+                alt={playlist.title}
+                className="w-full h-full object-cover rounded-sm"
+              />
+            </div>
+            <h3 className="font-bold text-base flex-grow">{playlist.title}</h3>
+            <button
+              onClick={(e) => handlePlayPlaylist(playlist.id, e)}
+              className="w-12 h-12 flex items-center justify-center rounded-full bg-[#1DB954] text-black opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-xl"
+            >
+              {isPlayingFromPlaylist(playlist.id) ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-1" />}
+            </button>
           </div>
-          <div>
-            <h3 className="font-bold">Dance Mix</h3>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-4 bg-[#181818] hover:bg-[#252525] transition-colors rounded overflow-hidden cursor-pointer p-4 flex-1">
-          <div className="w-16 h-16 relative flex-shrink-0">
-            <img 
-              src="https://i.scdn.co/image/ab67706f00000002c414e7daf34690c9f983f76e" 
-              alt="Chill Vibes" 
-              className="object-cover w-full h-full"
-            />
-          </div>
-          <div>
-            <h3 className="font-bold">Chill Vibes</h3>
-          </div>
-        </div>
+        ))}
       </div>
 
-      {/* Techno Mixes Section */}
+      {/* Techno Mixes */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-4">Mixes de techno</h2>
-        <div className="grid grid-cols-4 gap-6">
-          {/* Mix 1 - Techno Rave */}
-          <div className="bg-[#181818] rounded hover:bg-[#252525] transition-colors cursor-pointer overflow-hidden">
-            <div className="relative">
-              <img 
-                src="https://images.pexels.com/photos/1694900/pexels-photo-1694900.jpeg" 
-                alt="Mix Techno Rave" 
-                className="w-full aspect-square object-cover"
-              />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {technoMixes.map((mix, index) => (
+            <div
+              key={mix.id}
+              className="bg-[#181818] rounded-md hover:bg-[#282828] transition-colors group relative cursor-pointer"
+            >
+              <div className="aspect-square relative overflow-hidden">
+                <img
+                  src={mix.coverUrl || "/placeholder.svg"}
+                  alt={mix.title}
+                  className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                />
+                <button
+                  onClick={(e) => handlePlayMix(index, e)}
+                  className="absolute right-4 bottom-4 w-12 h-12 flex items-center justify-center rounded-full bg-[#1DB954] text-black opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-xl transform translate-y-2 group-hover:translate-y-0"
+                >
+                  <Play className="w-6 h-6 ml-1" />
+                </button>
+              </div>
+              <div className="p-4">
+                <h3 className="font-bold text-base mb-1 truncate">{mix.title}</h3>
+                <p className="text-sm text-zinc-400 truncate">{mix.artists}</p>
+              </div>
             </div>
-            <div className="p-4">
-              <h3 className="font-bold mb-1">Mix Techno Underground</h3>
-              <p className="text-sm text-zinc-400">Ben Klock, Marcel Dettmann, Jeff Mills</p>
-            </div>
-          </div>
-
-          {/* Mix 2 - Minimal Techno */}
-          <div className="bg-[#181818] rounded hover:bg-[#252525] transition-colors cursor-pointer overflow-hidden">
-            <div className="relative">
-              <img 
-                src="https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg" 
-                alt="Mix Minimal Techno" 
-                className="w-full aspect-square object-cover"
-              />
-            </div>
-            <div className="p-4">
-              <h3 className="font-bold mb-1">Mix Minimal Techno</h3>
-              <p className="text-sm text-zinc-400">Richie Hawtin, Dubfire, Paco Osuna</p>
-            </div>
-          </div>
-
-          {/* Mix 3 - Tech House */}
-          <div className="bg-[#181818] rounded hover:bg-[#252525] transition-colors cursor-pointer overflow-hidden">
-            <div className="relative">
-              <img 
-                src="https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg" 
-                alt="Mix Tech House" 
-                className="w-full aspect-square object-cover"
-              />
-            </div>
-            <div className="p-4">
-              <h3 className="font-bold mb-1">Mix Tech House</h3>
-              <p className="text-sm text-zinc-400">Fisher, Solardo, Hot Since 82</p>
-            </div>
-          </div>
-
-          {/* Mix 4 - Techno Rave */}
-          <div className="bg-[#181818] rounded hover:bg-[#252525] transition-colors cursor-pointer overflow-hidden">
-            <div className="relative">
-              <img 
-                src="https://images.pexels.com/photos/1540406/pexels-photo-1540406.jpeg" 
-                alt="Mix Techno Rave" 
-                className="w-full aspect-square object-cover"
-              />
-            </div>
-            <div className="p-4">
-              <h3 className="font-bold mb-1">Mix Techno Rave</h3>
-              <p className="text-sm text-zinc-400">Amelie Lens, Charlotte de Witte, FJAAK</p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
-  );
+  )
 }
+

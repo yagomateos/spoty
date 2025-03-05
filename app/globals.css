@@ -36,17 +36,18 @@
 }
 
 @font-face {
-  font-family: 'CircularSp';
-  src: url('https://open.spotify.com/fonts/CircularSpotify-UI-Latin-Book.woff2') format('woff2');
+  font-family: "CircularSp";
+  src: url("https://open.spotify.com/fonts/CircularSpotify-UI-Latin-Book.woff2") format("woff2");
   font-weight: normal;
 }
 
 @font-face {
-  font-family: 'CircularSp';
-  src: url('https://open.spotify.com/fonts/CircularSpotify-UI-Latin-Bold.woff2') format('woff2');
+  font-family: "CircularSp";
+  src: url("https://open.spotify.com/fonts/CircularSpotify-UI-Latin-Bold.woff2") format("woff2");
   font-weight: bold;
 }
 
 body {
-  font-family: 'CircularSp', system-ui, sans-serif;
+  font-family: "CircularSp", system-ui, sans-serif;
 }
+
