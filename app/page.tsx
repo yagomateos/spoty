@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Slider } from "@/components/ui/slider";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { songs } from "@/lib/songs";
+import { useState } from "react";
 
 const formatTime = (seconds: number): string => {
   const minutes = Math.floor(seconds / 60);
@@ -12,8 +13,164 @@ const formatTime = (seconds: number): string => {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 
+// Definir playlists para cada categoría con URLs de audio en línea
+const playlists = {
+  "industrial": [
+    {
+      id: "ind-1",
+      title: "Industrialized",
+      artist: "Front 242",
+      album: "Industrial Revolution",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273c79b600289a80aaef74d155d",
+      audioUrl: "https://assets.codepen.io/4358584/Anitek_-_Komorebi.mp3"
+    },
+    {
+      id: "ind-2",
+      title: "Metal Machine",
+      artist: "KMFDM",
+      album: "Industrial Beats",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273d8b9980db67272cb4d2c3daf",
+      audioUrl: "https://dl.dropboxusercontent.com/s/8m70z5hxot5eaux/bensound-summer.mp3"
+    },
+  ],
+  "electronica": [
+    {
+      id: "elec-1",
+      title: "Electric Dreams",
+      artist: "Aphex Twin",
+      album: "Electronic Visions",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273a0c33c8c253b660c6c5942b8",
+      audioUrl: "https://dl.dropboxusercontent.com/s/aag5tjzn9n1xhzv/bensound-dance.mp3"
+    },
+    {
+      id: "elec-2",
+      title: "Digital Love",
+      artist: "Daft Punk",
+      album: "Discovery",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273e9c9b2e25b05a77b6b462d39",
+      audioUrl: "https://dl.dropboxusercontent.com/s/aag5tjzn9n1xhzv/bensound-dance.mp3"
+    },
+  ],
+  "tecno": [
+    {
+      id: "tec-1",
+      title: "Techno Pulse",
+      artist: "Carl Cox",
+      album: "Techno Revolution",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273f429549123dbe8552764ba1d",
+      audioUrl: "https://dl.dropboxusercontent.com/s/ntcrj8frjlgwzqm/bensound-acousticbreeze.mp3"
+    },
+    {
+      id: "tec-2",
+      title: "Dark Techno",
+      artist: "Adam Beyer",
+      album: "Drumcode",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273b46f74097655d7f353caab14",
+      audioUrl: "https://dl.dropboxusercontent.com/s/e93f89s4lc9wkk5/bensound-buddy.mp3"
+    },
+  ],
+  "house": [
+    {
+      id: "house-1",
+      title: "Deep House Vibes",
+      artist: "Disclosure",
+      album: "House Nation",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273e1e350d06ffebd2e25147a0e",
+      audioUrl: "https://dl.dropboxusercontent.com/s/cenh9t4oslz37lj/bensound-ukulele.mp3"
+    },
+    {
+      id: "house-2",
+      title: "House Classics",
+      artist: "Frankie Knuckles",
+      album: "House Origins",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273e7be8a8650e4391af8e3762e",
+      audioUrl: "https://dl.dropboxusercontent.com/s/ro8c5o1iuetgfhj/bensound-jazzyfrenchy.mp3"
+    },
+  ],
+  "minimal": [
+    {
+      id: "min-1",
+      title: "Minimal Structure",
+      artist: "Richie Hawtin",
+      album: "Minimal Expressions",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273c79b600289a80aaef74d155d",
+      audioUrl: "https://assets.codepen.io/4358584/Anitek_-_Komorebi.mp3"
+    },
+    {
+      id: "min-2",
+      title: "Less Is More",
+      artist: "Ricardo Villalobos",
+      album: "Minimal Techno",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273d8b9980db67272cb4d2c3daf",
+      audioUrl: "https://dl.dropboxusercontent.com/s/8m70z5hxot5eaux/bensound-summer.mp3"
+    },
+  ],
+  "remixes": [
+    {
+      id: "remix-1",
+      title: "Remix Culture",
+      artist: "Various Artists",
+      album: "Remix Collection",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273a0c33c8c253b660c6c5942b8",
+      audioUrl: "https://dl.dropboxusercontent.com/s/aag5tjzn9n1xhzv/bensound-dance.mp3"
+    },
+    {
+      id: "remix-2",
+      title: "Classic Remixed",
+      artist: "DJ Shadow",
+      album: "Remix Anthology",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273e9c9b2e25b05a77b6b462d39",
+      audioUrl: "https://dl.dropboxusercontent.com/s/aag5tjzn9n1xhzv/bensound-dance.mp3"
+    },
+  ],
+  "tecnoRave": [
+    {
+      id: "tr-1",
+      title: "Rave Night",
+      artist: "Amelie Lens",
+      album: "Techno Rave",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273f429549123dbe8552764ba1d",
+      audioUrl: "https://dl.dropboxusercontent.com/s/ntcrj8frjlgwzqm/bensound-acousticbreeze.mp3"
+    },
+    {
+      id: "tr-2",
+      title: "Warehouse Rave",
+      artist: "Charlotte de Witte",
+      album: "Rave Culture",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273b46f74097655d7f353caab14",
+      audioUrl: "https://dl.dropboxusercontent.com/s/e93f89s4lc9wkk5/bensound-buddy.mp3"
+    },
+  ],
+  "techoHouse": [
+    {
+      id: "th-1",
+      title: "Tech House Fusion",
+      artist: "Fisher",
+      album: "Tech House Movement",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273e1e350d06ffebd2e25147a0e",
+      audioUrl: "https://dl.dropboxusercontent.com/s/cenh9t4oslz37lj/bensound-ukulele.mp3"
+    },
+    {
+      id: "th-2",
+      title: "Tech House Groove",
+      artist: "Solardo",
+      album: "Tech House Essentials",
+      coverUrl: "https://i.scdn.co/image/ab67616d0000b273e7be8a8650e4391af8e3762e",
+      audioUrl: "https://dl.dropboxusercontent.com/s/ro8c5o1iuetgfhj/bensound-jazzyfrenchy.mp3"
+    },
+  ]
+};
+
 export default function Home() {
   const { currentSong, isPlaying, progress, duration, playSong, setVolume, seekTo } = useAudioPlayer();
+  const [activePlaylist, setActivePlaylist] = useState<string | null>(null);
+  const [displaySongs, setDisplaySongs] = useState(songs);
+
+  // Función para cambiar la lista de reproducción activa
+  const handlePlaylistClick = (playlistKey: string) => {
+    setActivePlaylist(playlistKey);
+    setDisplaySongs(playlists[playlistKey as keyof typeof playlists]);
+  };
 
   return (
     <div className="h-screen bg-[#121212]">
@@ -41,10 +198,86 @@ export default function Home() {
             </nav>
 
             <nav className="mt-6 pt-6 border-t border-zinc-800 flex flex-col gap-3">
-              <a href="" className="text-sm text-zinc-400 hover:text-zinc-100">Hot Hits España</a>
-              <a href="" className="text-sm text-zinc-400 hover:text-zinc-100">Aniver Funk</a>
-              <a href="" className="text-sm text-zinc-400 hover:text-zinc-100">My Playlist #13</a>
-              <a href="" className="text-sm text-zinc-400 hover:text-zinc-100">Top Brasil</a>
+              <a 
+                href="#" 
+                className={`text-sm ${activePlaylist === 'industrial' ? 'text-zinc-100' : 'text-zinc-400'} hover:text-zinc-100`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePlaylistClick('industrial');
+                }}
+              >
+                Industrial
+              </a>
+              <a 
+                href="#" 
+                className={`text-sm ${activePlaylist === 'electronica' ? 'text-zinc-100' : 'text-zinc-400'} hover:text-zinc-100`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePlaylistClick('electronica');
+                }}
+              >
+                Electronica
+              </a>
+              <a 
+                href="#" 
+                className={`text-sm ${activePlaylist === 'tecno' ? 'text-zinc-100' : 'text-zinc-400'} hover:text-zinc-100`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePlaylistClick('tecno');
+                }}
+              >
+                Tecno
+              </a>
+              <a 
+                href="#" 
+                className={`text-sm ${activePlaylist === 'house' ? 'text-zinc-100' : 'text-zinc-400'} hover:text-zinc-100`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePlaylistClick('house');
+                }}
+              >
+                House
+              </a>
+              <a 
+                href="#" 
+                className={`text-sm ${activePlaylist === 'minimal' ? 'text-zinc-100' : 'text-zinc-400'} hover:text-zinc-100`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePlaylistClick('minimal');
+                }}
+              >
+                Minimal
+              </a>
+              <a 
+                href="#" 
+                className={`text-sm ${activePlaylist === 'remixes' ? 'text-zinc-100' : 'text-zinc-400'} hover:text-zinc-100`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePlaylistClick('remixes');
+                }}
+              >
+                Remixes
+              </a>
+              <a 
+                href="#" 
+                className={`text-sm ${activePlaylist === 'tecnoRave' ? 'text-zinc-100' : 'text-zinc-400'} hover:text-zinc-100`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePlaylistClick('tecnoRave');
+                }}
+              >
+                Tecno Rave
+              </a>
+              <a 
+                href="#" 
+                className={`text-sm ${activePlaylist === 'techoHouse' ? 'text-zinc-100' : 'text-zinc-400'} hover:text-zinc-100`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePlaylistClick('techoHouse');
+                }}
+              >
+                Techo House
+              </a>
             </nav>
           </nav>
         </aside>
@@ -78,10 +311,20 @@ export default function Home() {
             </button>
           </div>
 
-          <h1 className="font-semibold text-2xl lg:text-3xl mt-8 text-white">Good Afternoon</h1>
+          <h1 className="font-semibold text-2xl lg:text-3xl mt-8 text-white">
+            {activePlaylist === 'industrial' ? 'Industrial' : 
+             activePlaylist === 'electronica' ? 'Electronica' : 
+             activePlaylist === 'tecno' ? 'Tecno' : 
+             activePlaylist === 'house' ? 'House' : 
+             activePlaylist === 'minimal' ? 'Minimal' : 
+             activePlaylist === 'remixes' ? 'Remixes' : 
+             activePlaylist === 'tecnoRave' ? 'Tecno Rave' : 
+             activePlaylist === 'techoHouse' ? 'Techo House' : 
+             'Buenas tardes'}
+          </h1>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            {songs.map((song) => (
+            {displaySongs.map((song) => (
               <a key={song.id} href="#" className="bg-white/5 group rounded flex items-center gap-4 overflow-hidden hover:bg-white/10 transition-colors">
                 <Image src={song.coverUrl} width={104} height={104} alt={`${song.title} cover`} className="lg:w-[104px] lg:h-[104px]" />
                 <strong className="text-white">{song.title}</strong>
@@ -99,22 +342,22 @@ export default function Home() {
             ))}
           </div>
 
-          <h2 className="font-semibold text-xl lg:text-2xl mt-8 text-white">Made for You</h2>
+          <h2 className="font-semibold text-xl lg:text-2xl mt-8 text-white">Hecho para ti</h2>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
             <a href="#" className="bg-white/5 p-3 rounded-md flex flex-col gap-2 hover:bg-white/10">
-              <Image src="https://images.unsplash.com/photo-1671726203638-83742a2721a1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" className="w-full" width={120} height={120} alt="Album cover" />
-              <strong className="font-semibold text-white">Daily Mix 1</strong>
-              <span className="text-sm text-zinc-400">Wallows, COIN, girl in red and more</span>
+              <Image src="https://images.unsplash.com/photo-1671726203638-83742a2721a1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" className="w-full" width={120} height={120} alt="Portada del álbum" />
+              <strong className="font-semibold text-white">Mix Diario 1</strong>
+              <span className="text-sm text-zinc-400">Wallows, COIN, girl in red y más</span>
             </a>
             <a href="#" className="bg-white/5 p-3 rounded-md flex flex-col gap-2 hover:bg-white/10">
-              <Image src="https://images.unsplash.com/photo-1671726203449-ad3279d25921?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" className="w-full" width={120} height={120} alt="Album cover" />
-              <strong className="font-semibold text-white">Daily Mix 2</strong>
+              <Image src="https://images.unsplash.com/photo-1671726203449-ad3279d25921?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" className="w-full" width={120} height={120} alt="Portada del álbum" />
+              <strong className="font-semibold text-white">Mix Diario 2</strong>
               <span className="text-sm text-zinc-400">Imagine Dragons, AJR, OneRepublic</span>
             </a>
             <a href="#" className="bg-white/5 p-3 rounded-md flex flex-col gap-2 hover:bg-white/10">
-              <Image src="https://images.unsplash.com/photo-1671726203454-488ab18f7eda?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" className="w-full" width={120} height={120} alt="Album cover" />
-              <strong className="font-semibold text-white">Daily Mix 3</strong>
+              <Image src="https://images.unsplash.com/photo-1671726203454-488ab18f7eda?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" className="w-full" width={120} height={120} alt="Portada del álbum" />
+              <strong className="font-semibold text-white">Mix Diario 3</strong>
               <span className="text-sm text-zinc-400">Coldplay, The Lumineers, Vance Joy</span>
             </a>
           </div>
