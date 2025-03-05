@@ -348,7 +348,7 @@ export default function Home() {
              activePlaylist === 'remixes' ? 'Remixes' : 
              activePlaylist === 'technoRave' ? 'Techno Rave' : 
              activePlaylist === 'techoHouse' ? 'Techo House' : 
-             'Spoti Tech'}
+             'Spoty Tech'}
           </h1>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
