@@ -56,13 +56,7 @@ export const useAudioPlayer = () => {
     if (!audioRef.current) return;
 
     if (currentSong?.id === song.id) {
-      if (isPlaying) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        audioRef.current.play();
-        setIsPlaying(true);
-      }
+      togglePlay(); // Ahora togglePlay está definido
     } else {
       if (currentSong) {
         audioRef.current.pause();
@@ -72,6 +66,16 @@ export const useAudioPlayer = () => {
       setCurrentSong(song);
       setIsPlaying(true);
     }
+  };
+
+  const togglePlay = () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
   };
 
   const setVolume = (value: number) => {
@@ -94,6 +98,7 @@ export const useAudioPlayer = () => {
     progress,
     duration,
     playSong,
+    togglePlay, // Se agrega togglePlay al retorno
     setVolume,
     seekTo
   };
