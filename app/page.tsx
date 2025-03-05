@@ -370,7 +370,7 @@ export default function Home() {
             ))}
           </div>
 
-          <h2 className="font-semibold text-xl lg:text-2xl mt-8 text-white">Mixes de Techno</h2>
+          <h2 className="font-semibold text-xl lg:text-2xl mt-8 text-white">Mixes de techno</h2>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
             {technoMixes.map((mix) => (
