@@ -342,13 +342,13 @@ export default function Home() {
           <h1 className="font-semibold text-2xl lg:text-3xl mt-8 text-white">
             {activePlaylist === 'industrial' ? 'Industrial' : 
              activePlaylist === 'electronica' ? 'Electronica' : 
-             activePlaylist === 'techno' ? 'techno' : 
+             activePlaylist === 'techno' ? 'Techno' : 
              activePlaylist === 'house' ? 'House' : 
              activePlaylist === 'minimal' ? 'Minimal' : 
              activePlaylist === 'remixes' ? 'Remixes' : 
-             activePlaylist === 'technoRave' ? 'techno Rave' : 
+             activePlaylist === 'technoRave' ? 'Techno Rave' : 
              activePlaylist === 'techoHouse' ? 'Techo House' : 
-             'Spoti Techno'}
+             'Spoti Tech'}
           </h1>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
