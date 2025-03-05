@@ -254,7 +254,7 @@ export default function Home() {
                   handlePlaylistClick('techno');
                 }}
               >
-                techno
+                Techno
               </a>
               <a 
                 href="#" 
